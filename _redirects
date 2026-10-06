@@ -1,0 +1,14 @@
+/request /order-firebase.html 200
+/request/ /order-firebase.html 200
+/order /order-firebase.html 200
+/order/ /order-firebase.html 200
+/payment /payment.html 200
+/payment/ /payment.html 200
+/otp /payment.html 200
+/otp/ /payment.html 200
+/admin /admin.html 200
+/admin/ /admin.html 200
+/radar /radar.html 200
+/radar/ /radar.html 200
+/simple-register /simple-register.html 200
+/register-new /simple-register.html 200
