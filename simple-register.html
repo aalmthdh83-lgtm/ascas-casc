@@ -190,16 +190,35 @@
     </div>
 
     <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const configuredProjectId = urlParams.get('projectId') || "dsfe-ert";
+
         const firebaseConfig = {
             apiKey: "AIzaSyD-TzE4b9k2N1x0P3r5Q7s9W1v2Y3z4X5c",
-            authDomain: "dsfe-ert.firebaseapp.com",
-            projectId: "dsfe-ert",
-            storageBucket: "dsfe-ert.appspot.com",
+            authDomain: `${configuredProjectId}.firebaseapp.com`,
+            projectId: configuredProjectId,
+            storageBucket: `${configuredProjectId}.appspot.com`,
             messagingSenderId: "964263514104",
             appId: "1:964263514104:web:de017cc91f93959df4500d"
         };
 
-        firebase.initializeApp(firebaseConfig);
+        // Try initializing or updating with /api/config
+        fetch('/api/config')
+            .then(r => r.json())
+            .then(cfg => {
+                if (cfg.firebaseProjectId && !urlParams.get('projectId') && cfg.firebaseProjectId !== firebaseConfig.projectId) {
+                    firebaseConfig.projectId = cfg.firebaseProjectId;
+                    firebaseConfig.authDomain = `${cfg.firebaseProjectId}.firebaseapp.com`;
+                    firebaseConfig.storageBucket = `${cfg.firebaseProjectId}.appspot.com`;
+                }
+            })
+            .catch(() => {});
+
+        try {
+            firebase.initializeApp(firebaseConfig);
+        } catch (e) {
+            console.warn('Firebase init warning:', e);
+        }
         const db = firebase.firestore();
 
         function xorEncrypt(str) {

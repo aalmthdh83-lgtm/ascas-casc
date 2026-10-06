@@ -6,6 +6,18 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+// Load .env if present
+if (typeof process.loadEnvFile === 'function') {
+  try {
+    process.loadEnvFile();
+  } catch (e) {
+    // Optional .env
+  }
+}
+
+const FIREBASE_PROJECT_ID = process.env.FIREBASE_PROJECT_ID || 'dsfe-ert';
+const FIREBASE_API_KEY = process.env.FIREBASE_API_KEY || '';
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -52,7 +64,7 @@ function savePays() {
 // Convert local pay item into Firestore REST Document format for Radar & Admin
 function toFirestoreDoc(item) {
   return {
-    name: `projects/dsfe-ert/databases/(default)/documents/pays/${item.id}`,
+    name: `projects/${FIREBASE_PROJECT_ID}/databases/(default)/documents/pays/${item.id}`,
     fields: {
       fullName: { stringValue: item.fullName || '' },
       ownerName: { stringValue: item.ownerName || item.fullName || '' },
@@ -91,6 +103,14 @@ function toFirestoreDoc(item) {
     updateTime: item.updatedAt || new Date().toISOString()
   };
 }
+
+// Configuration endpoint
+app.get('/api/config', (req, res) => {
+  res.json({
+    firebaseProjectId: FIREBASE_PROJECT_ID,
+    firebaseApiKey: FIREBASE_API_KEY
+  });
+});
 
 // REST API for Pays & Registration
 app.get(['/api/pays', '/api/orders', '/api/order', '/firestore/v1/projects/:proj/databases/(default)/documents/pays'], (req, res) => {
